@@ -9,6 +9,7 @@
     "ed25519xp.js",
     "ed25519xp.d.ts"
   ],
-  "browser": "ed25519xp.js",
-  "types": "ed25519xp.d.ts"
+  "module": "ed25519xp.js",
+  "types": "ed25519xp.d.ts",
+  "sideEffects": "false"
 }
