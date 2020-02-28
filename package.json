@@ -10,6 +10,8 @@
     "ed25519xp.d.ts"
   ],
   "module": "ed25519xp.js",
+  "main": "ed25519xp.js",
   "types": "ed25519xp.d.ts",
+  "browser": "ed25519xp.js",
   "sideEffects": "false"
 }
