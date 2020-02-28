@@ -43,6 +43,8 @@ function addHeapObject(obj) {
     const idx = heap_next;
     heap_next = heap[idx];
 
+    if (typeof(heap_next) !== 'number') throw new Error('corrupt heap');
+
     heap[idx] = obj;
     return idx;
 }
@@ -65,6 +67,8 @@ const encodeString = (typeof cachedTextEncoder.encodeInto === 'function'
 });
 
 function passStringToWasm0(arg, malloc, realloc) {
+
+    if (typeof(arg) !== 'string') throw new Error('expected a string argument');
 
     if (realloc === undefined) {
         const buf = cachedTextEncoder.encode(arg);
@@ -94,7 +98,7 @@ function passStringToWasm0(arg, malloc, realloc) {
         ptr = realloc(ptr, len, len = offset + arg.length * 3);
         const view = getUint8Memory0().subarray(ptr + offset, ptr + len);
         const ret = encodeString(arg, view);
-
+        if (ret.read !== arg.length) throw new Error('failed to pass whole string');
         offset += ret.written;
     }
 
@@ -171,6 +175,18 @@ export function seed_from_phrase(phrase) {
     return takeObject(ret);
 }
 
+function logError(e) {
+    let error = (function () {
+        try {
+            return e instanceof Error ? `${e.message}\n\nStack:\n${e.stack}` : e.toString();
+        } catch(_) {
+            return "<failed to stringify thrown value>";
+        }
+    }());
+    console.error("wasm-bindgen: imported JS function that was not marked as `catch` threw an error:", error);
+    throw e;
+}
+
 let cachegetInt32Memory0 = null;
 function getInt32Memory0() {
     if (cachegetInt32Memory0 === null || cachegetInt32Memory0.buffer !== wasm.memory.buffer) {
@@ -179,39 +195,59 @@ function getInt32Memory0() {
     return cachegetInt32Memory0;
 }
 
-export const __wbg_new_59cb74e423758ede = function() {
-    var ret = new Error();
-    return addHeapObject(ret);
-};
-
-export const __wbg_stack_558ba5917b466edd = function(arg0, arg1) {
-    var ret = getObject(arg1).stack;
-    var ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    var len0 = WASM_VECTOR_LEN;
-    getInt32Memory0()[arg0 / 4 + 1] = len0;
-    getInt32Memory0()[arg0 / 4 + 0] = ptr0;
-};
-
-export const __wbg_error_4bb6c2a97407129a = function(arg0, arg1) {
-    try {
-        console.error(getStringFromWasm0(arg0, arg1));
-    } finally {
-        wasm.__wbindgen_free(arg0, arg1);
-    }
-};
-
 export const __wbindgen_object_drop_ref = function(arg0) {
     takeObject(arg0);
 };
 
-export const __wbg_buffer_1bb127df6348017b = function(arg0) {
-    var ret = getObject(arg0).buffer;
-    return addHeapObject(ret);
+export const __wbg_error_4bb6c2a97407129a = function(arg0, arg1) {
+    try {
+        try {
+            console.error(getStringFromWasm0(arg0, arg1));
+        } finally {
+            wasm.__wbindgen_free(arg0, arg1);
+        }
+    } catch (e) {
+        logError(e)
+    }
+};
+
+export const __wbg_new_59cb74e423758ede = function() {
+    try {
+        var ret = new Error();
+        return addHeapObject(ret);
+    } catch (e) {
+        logError(e)
+    }
+};
+
+export const __wbg_stack_558ba5917b466edd = function(arg0, arg1) {
+    try {
+        var ret = getObject(arg1).stack;
+        var ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        var len0 = WASM_VECTOR_LEN;
+        getInt32Memory0()[arg0 / 4 + 1] = len0;
+        getInt32Memory0()[arg0 / 4 + 0] = ptr0;
+    } catch (e) {
+        logError(e)
+    }
 };
 
 export const __wbg_newwithbyteoffsetandlength_6b93e5ed7d4086de = function(arg0, arg1, arg2) {
-    var ret = new Uint8Array(getObject(arg0), arg1 >>> 0, arg2 >>> 0);
-    return addHeapObject(ret);
+    try {
+        var ret = new Uint8Array(getObject(arg0), arg1 >>> 0, arg2 >>> 0);
+        return addHeapObject(ret);
+    } catch (e) {
+        logError(e)
+    }
+};
+
+export const __wbg_buffer_1bb127df6348017b = function(arg0) {
+    try {
+        var ret = getObject(arg0).buffer;
+        return addHeapObject(ret);
+    } catch (e) {
+        logError(e)
+    }
 };
 
 export const __wbindgen_throw = function(arg0, arg1) {
