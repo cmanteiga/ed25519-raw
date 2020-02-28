@@ -1,17 +1,15 @@
 {
-  "name": "ed25519-raw",
+  "name": "ed25519xp",
   "collaborators": [
-    "cmainteiga <carlos.manteiga@gmail.com>"
+    "Nicolas Marshall <marshall.nicolas@gmail.com>"
   ],
   "version": "0.1.0",
   "files": [
-    "ed25519xp_bg.wasm",
-    "ed25519xp.js",
-    "ed25519xp.d.ts"
+    "ed25519-raw_bg.wasm",
+    "ed25519-raw.js",
+    "ed25519-raw.d.ts"
   ],
-  "module": "ed25519xp.js",
-  "main": "ed25519xp.js",
-  "types": "ed25519xp.d.ts",
-  "browser": "ed25519xp.js",
+  "module": "ed25519-raw.js",
+  "types": "ed25519-raw.d.ts",
   "sideEffects": "false"
 }
