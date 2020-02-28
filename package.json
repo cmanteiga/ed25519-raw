@@ -1,7 +1,7 @@
 {
   "name": "ed25519-raw",
   "collaborators": [
-    "Nicolas Marshall <marshall.nicolas@gmail.com>"
+    "cmainteiga <carlos.manteiga@gmail.com>"
   ],
   "version": "0.1.0",
   "files": [
