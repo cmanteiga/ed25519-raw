@@ -1,11 +1,12 @@
+(function() {
+    const __exports = {};
+    let wasm;
 
-let wasm;
+    const heap = new Array(32);
 
-const heap = new Array(32);
+    heap.fill(undefined);
 
-heap.fill(undefined);
-
-heap.push(undefined, null, true, false);
+    heap.push(undefined, null, true, false);
 
 function getObject(idx) { return heap[idx]; }
 
@@ -106,12 +107,12 @@ function passStringToWasm0(arg, malloc, realloc) {
 * @param {string} phrase
 * @returns {any}
 */
-export function gen_keypair(phrase) {
+__exports.gen_keypair = function(phrase) {
     var ptr0 = passStringToWasm0(phrase, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     var len0 = WASM_VECTOR_LEN;
     var ret = wasm.gen_keypair(ptr0, len0);
     return takeObject(ret);
-}
+};
 
 function passArray8ToWasm0(arg, malloc) {
     const ptr = malloc(arg.length * 1);
@@ -123,26 +124,26 @@ function passArray8ToWasm0(arg, malloc) {
 * @param {Uint8Array} pair_bytes
 * @returns {any}
 */
-export function pubKey_from_pair_bytes(pair_bytes) {
+__exports.pubKey_from_pair_bytes = function(pair_bytes) {
     var ptr0 = passArray8ToWasm0(pair_bytes, wasm.__wbindgen_malloc);
     var len0 = WASM_VECTOR_LEN;
     var ret = wasm.pubKey_from_pair_bytes(ptr0, len0);
     return takeObject(ret);
-}
+};
 
 /**
 * @param {Uint8Array} message
 * @param {Uint8Array} keypair_bytes
 * @returns {any}
 */
-export function sign(message, keypair_bytes) {
+__exports.sign = function(message, keypair_bytes) {
     var ptr0 = passArray8ToWasm0(message, wasm.__wbindgen_malloc);
     var len0 = WASM_VECTOR_LEN;
     var ptr1 = passArray8ToWasm0(keypair_bytes, wasm.__wbindgen_malloc);
     var len1 = WASM_VECTOR_LEN;
     var ret = wasm.sign(ptr0, len0, ptr1, len1);
     return takeObject(ret);
-}
+};
 
 /**
 * @param {Uint8Array} message
@@ -150,7 +151,7 @@ export function sign(message, keypair_bytes) {
 * @param {Uint8Array} sig_bytes
 * @returns {boolean}
 */
-export function verify(message, pubKey_bytes, sig_bytes) {
+__exports.verify = function(message, pubKey_bytes, sig_bytes) {
     var ptr0 = passArray8ToWasm0(message, wasm.__wbindgen_malloc);
     var len0 = WASM_VECTOR_LEN;
     var ptr1 = passArray8ToWasm0(pubKey_bytes, wasm.__wbindgen_malloc);
@@ -159,18 +160,18 @@ export function verify(message, pubKey_bytes, sig_bytes) {
     var len2 = WASM_VECTOR_LEN;
     var ret = wasm.verify(ptr0, len0, ptr1, len1, ptr2, len2);
     return ret !== 0;
-}
+};
 
 /**
 * @param {string} phrase
 * @returns {any}
 */
-export function seed_from_phrase(phrase) {
+__exports.seed_from_phrase = function(phrase) {
     var ptr0 = passStringToWasm0(phrase, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     var len0 = WASM_VECTOR_LEN;
     var ret = wasm.seed_from_phrase(ptr0, len0);
     return takeObject(ret);
-}
+};
 
 let cachegetInt32Memory0 = null;
 function getInt32Memory0() {
@@ -182,7 +183,13 @@ function getInt32Memory0() {
 
 function init(module) {
     if (typeof module === 'undefined') {
-        module = import.meta.url.replace(/\.js$/, '_bg.wasm');
+        let src;
+        if (self.document === undefined) {
+            src = self.location.href;
+        } else {
+            src = self.document.currentScript.src;
+        }
+        module = src.replace(/\.js$/, '_bg.wasm');
     }
     let result;
     const imports = {};
@@ -265,5 +272,6 @@ function init(module) {
     });
 }
 
-export default init;
+self.wasm_bindgen = Object.assign(init, __exports);
 
+})();
